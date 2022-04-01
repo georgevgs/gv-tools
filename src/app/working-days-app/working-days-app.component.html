@@ -1,0 +1,39 @@
+<h2>
+    PigiDays
+    <img src="https://i1.wp.com/blog.contactpigeon.com/wp-content/uploads/2016/10/contactpigeon-logo-square.png?fit=450%2C450&ssl=1" alt="CP Pigeon" width="45" height="45">
+  </h2>
+  
+  
+  <div class="tab">
+    <button class="tablinks" onclick="openDatePicker(event, 'Month')" id="defaultOpen">Month pick</button>
+    <button class="tablinks" onclick="openDatePicker(event, 'Day')">Day pick</button>
+  </div>
+  
+  <!-- Tab content -->
+  <div id="Month" class="tabcontent">
+    <label for="start">Month:</label>
+    <input type="month" id="month" name="trip-month" value="2022-03">
+  
+    <label for="daysOff">Μέρες αδειούλας:</label>
+    <input type="number" id="daysOffM" name="trip-daysOff" value="0" min="0">
+  
+    <button onclick="runMonth()">
+      Submit
+    </button>
+  </div>
+  
+  <div id="Day" class="tabcontent">
+    <label for="start">Start date:</label>
+    <input type="date" id="start" name="trip-start" value="2022-03-01">
+  
+    <label for="end">End date:</label>
+    <input type="date" id="end" name="trip-end" value="2022-03-31">
+  
+    <label for="daysOff">Μέρες αδειούλας:</label>
+    <input type="number" id="daysOffD" name="trip-daysOff" value="0" min="0">
+  
+    <button onclick="runDay()">
+      Submit
+    </button>
+  </div>
+  
