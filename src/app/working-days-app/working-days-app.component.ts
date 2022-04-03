@@ -12,60 +12,63 @@ export class WorkingDaysAppComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  document.getElementById("defaultOpen").click();
+  mdate: any;
 
-  const holidays = ['10', '60', '72', '252', '157', '289', '2511', '2611']; // Greek public holidays
+  // document.getElementById("defaultOpen").click();
 
-  runDay(): void {
-    @ViewChild('#start') input: ElementRef;
-    this.input.nativeElement.setAttribute('test', ‘’);
-    const sDay = document.querySelector('#start').value.split('-')[2];
-    const sMonth = parseInt(document.querySelector('#start').value.split('-')[1]) - 1;
-    const sYear = document.querySelector('#start').value.split('-')[0];
+  holidays = ['10', '60', '72', '252', '157', '289', '2511', '2611']; // Greek public holidays
 
-    const eDay = document.querySelector('#end').value.split('-')[2];
-    const eMonth = parseInt(document.querySelector('#end').value.split('-')[1]) - 1;
-    const eYear = document.querySelector('#end').value.split('-')[0];
+  // runDay(): void {
+  //   const sDay = document.querySelector('#start').value.split('-')[2];
+  //   const sMonth = parseInt(document.querySelector('#start').value.split('-')[1]) - 1;
+  //   const sYear = document.querySelector('#start').value.split('-')[0];
 
-    const startDate = new Date(sYear, sMonth, sDay);
-    const endDate = new Date(eYear, eMonth, eDay);
+  //   const eDay = document.querySelector('#end').value.split('-')[2];
+  //   const eMonth = parseInt(document.querySelector('#end').value.split('-')[1]) - 1;
+  //   const eYear = document.querySelector('#end').value.split('-')[0];
 
-    console.log("Start: " + startDate);
-    console.log("End: " + endDate);
+  //   const startDate = new Date(sYear, sMonth, sDay);
+  //   const endDate = new Date(eYear, eMonth, eDay);
 
-    this.getBusinessDatesCount(startDate, endDate, 'Days');
-  }
+  //   console.log("Start: " + startDate);
+  //   console.log("End: " + endDate);
+
+  //   this.getBusinessDatesCount(startDate, endDate, 'Days');
+  // }
 
   runMonth(): void {
-    const sDay = 01;
-    const sMonth = parseInt(document.querySelector('#month').value.split('-')[1]) - 1;
-    const sYear = document.querySelector('#month').value.split('-')[0];
+    const sDay = 0o1;
+    // const sMonth = parseInt(document.querySelector('#month').value.split('-')[1]) - 1;
+    // const sYear = document.querySelector('#month').value.split('-')[0];
+    const sMonth = 0o3
+
+    console.log(this.mdate);
 
     let eDay = 31;
 
-    switch (sMonth) {
-      case 00: // January
+    switch (sMonth as number) {
+      case 0o0: // January
         eDay = 31;
         break;
-      case 01: // February
+      case 0o1: // February
         eDay = 28;
         break;
-      case 02: // March
+      case 0o2: // March
         eDay = 31;
         break;
-      case 03: // April
+      case 0o3: // April
         eDay = 30;
         break;
-      case 04: // May
+      case 0o4: // May
         eDay = 31;
         break;
-      case 05: // June
+      case 0o5: // June
         eDay = 30;
         break;
-      case 06: // July
+      case 0o6: // July
         eDay = 31;
         break;
-      case 07: // August
+      case 0o7: // August
         eDay = 31;
         break;
       case 08: // September
@@ -81,19 +84,19 @@ export class WorkingDaysAppComponent implements OnInit {
         eDay = 31;
     }
 
-    const eMonth = parseInt(document.querySelector('#month').value.split('-')[1]) - 1;
-    const eYear = document.querySelector('#month').value.split('-')[0];
+    // const eMonth = parseInt(document.querySelector('#month').value.split('-')[1]) - 1;
+    // const eYear = document.querySelector('#month').value.split('-')[0];
 
-    const startDate = new Date(sYear, sMonth, sDay);
-    const endDate = new Date(eYear, eMonth, eDay);
+    // const startDate = new Date(sYear, sMonth, sDay);
+    // const endDate = new Date(eYear, eMonth, eDay);
 
-    console.log("Start: " + startDate);
-    console.log("End: " + endDate);
+    // console.log("Start: " + startDate);
+    // console.log("End: " + endDate);
 
-    this.getBusinessDatesCount(startDate, endDate, 'Month');
+    // this.getBusinessDatesCount(startDate, endDate, 'Month');
   }
 
-  getBusinessDatesCount(startDate, endDate, tab): any {
+  getBusinessDatesCount(startDate: Date, endDate: number | Date, tab: string): any {
     try {
       let count = 0;
       const curDate = new Date(startDate.getTime());
@@ -113,13 +116,13 @@ export class WorkingDaysAppComponent implements OnInit {
       curDate.setDate(curDate.getDate() - 1); // Revert back one day to calculate correctly bellow
 
       let daysOff = 0;
-      if (tab === 'Month') {
-        daysOff = document.querySelector('#daysOffM').value;
-        console.log('Month ' + daysOff);
-      } else if (tab === 'Days') {
-        daysOff = document.querySelector('#daysOffD').value;
-        console.log('Days ' + daysOff);
-      }
+      // if (tab === 'Month') {
+      //   daysOff = document.querySelector('#daysOffM').value;
+      //   console.log('Month ' + daysOff);
+      // } else if (tab === 'Days') {
+      //   daysOff = document.querySelector('#daysOffD').value;
+      //   console.log('Days ' + daysOff);
+      // }
 
       // Rotating holidays
       count = count - daysOff;
@@ -158,24 +161,24 @@ export class WorkingDaysAppComponent implements OnInit {
     } catch (e) { }
   }
 
-  openDatePicker(evt, pickerTypeName): void {
-    // Declare all variables
-    var i, tabcontent, tablinks;
+  // openDatePicker(evt, pickerTypeName): void {
+  //   // Declare all variables
+  //   var i, tabcontent, tablinks;
 
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
+  //   // Get all elements with class="tabcontent" and hide them
+  //   tabcontent = document.getElementsByClassName("tabcontent");
+  //   for (i = 0; i < tabcontent.length; i++) {
+  //     tabcontent[i].style.display = "none";
+  //   }
 
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
+  //   // Get all elements with class="tablinks" and remove the class "active"
+  //   tablinks = document.getElementsByClassName("tablinks");
+  //   for (i = 0; i < tablinks.length; i++) {
+  //     tablinks[i].className = tablinks[i].className.replace(" active", "");
+  //   }
 
-    // Show the current tab, and add an "active" class to the button that opened the tab
-    document.getElementById(pickerTypeName).style.display = "block";
-    evt.currentTarget.className += " active";
-  }
+  //   // Show the current tab, and add an "active" class to the button that opened the tab
+  //   document.getElementById(pickerTypeName).style.display = "block";
+  //   evt.currentTarget.className += " active";
+  // }
 }

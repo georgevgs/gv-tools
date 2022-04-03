@@ -12,7 +12,7 @@
   <!-- Tab content -->
   <div id="Month" class="tabcontent">
     <label for="start">Month:</label>
-    <input type="month" id="month" name="trip-month" value="2022-03">
+    <input type="month" id="month" [(ngModel)]="mdate"  name="trip-month" value="2022-03">
   
     <label for="daysOff">Μέρες αδειούλας:</label>
     <input type="number" id="daysOffM" name="trip-daysOff" value="0" min="0">
