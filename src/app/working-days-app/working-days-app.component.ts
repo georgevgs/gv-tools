@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-working-days-app',
@@ -9,72 +9,83 @@ export class WorkingDaysAppComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
+  sddate: any;
+  eddate: any;
   mdate: any;
+  mdaysoff: number = 0;
+  count: number = 0;
+  result: string = '';
 
-  // document.getElementById("defaultOpen").click();
+  ngOnInit(): void {
+    const today = new Date();
+
+    if ((today.getMonth() + 1).toString().length === 1) {
+      this.mdate = today.getFullYear() + '-0' + (today.getMonth() + 1);
+    } else {
+      this.mdate = today.getFullYear() + '-' + (today.getMonth() + 1);
+    }
+  }
 
   holidays = ['10', '60', '72', '252', '157', '289', '2511', '2611']; // Greek public holidays
 
-  // runDay(): void {
-  //   const sDay = document.querySelector('#start').value.split('-')[2];
-  //   const sMonth = parseInt(document.querySelector('#start').value.split('-')[1]) - 1;
-  //   const sYear = document.querySelector('#start').value.split('-')[0];
+  runDay(): void {
+    const sDay = this.sddate.split('-')[2];
+    const sMonth = parseInt(this.sddate.split('-')[1]) - 1;
+    const sYear = this.sddate.split('-')[0];
 
-  //   const eDay = document.querySelector('#end').value.split('-')[2];
-  //   const eMonth = parseInt(document.querySelector('#end').value.split('-')[1]) - 1;
-  //   const eYear = document.querySelector('#end').value.split('-')[0];
+    const eDay = this.eddate.split('-')[2];
+    const eMonth = parseInt(this.eddate.split('-')[1]) - 1;
+    const eYear = this.sddate.split('-')[0];
 
-  //   const startDate = new Date(sYear, sMonth, sDay);
-  //   const endDate = new Date(eYear, eMonth, eDay);
+    const startDate = new Date(sYear, sMonth, sDay);
+    const endDate = new Date(eYear, eMonth, eDay);
 
-  //   console.log("Start: " + startDate);
-  //   console.log("End: " + endDate);
+    console.log("Start: " + startDate);
+    console.log("End: " + endDate);
 
-  //   this.getBusinessDatesCount(startDate, endDate, 'Days');
-  // }
+    this.getBusinessDatesCount(startDate, endDate, 'Days');
+  }
 
   runMonth(): void {
     const sDay = 0o1;
-    // const sMonth = parseInt(document.querySelector('#month').value.split('-')[1]) - 1;
-    // const sYear = document.querySelector('#month').value.split('-')[0];
-    const sMonth = 0o3
-
-    console.log(this.mdate);
+    const sMonth = parseInt(this.mdate.split('-')[1]) - 1;
+    const sYear = this.mdate.split('-')[0];
 
     let eDay = 31;
 
     switch (sMonth as number) {
-      case 0o0: // January
+      case 0: // January
         eDay = 31;
         break;
-      case 0o1: // February
-        eDay = 28;
+      case 1: // February
+        if (sYear === '2024' || sYear === '2028') {
+          eDay = 29;
+        } else {
+          eDay = 28;
+        }
         break;
-      case 0o2: // March
+      case 2: // March
         eDay = 31;
         break;
-      case 0o3: // April
+      case 3: // April
         eDay = 30;
         break;
-      case 0o4: // May
+      case 4: // May
         eDay = 31;
         break;
-      case 0o5: // June
+      case 5: // June
         eDay = 30;
         break;
-      case 0o6: // July
+      case 6: // July
         eDay = 31;
         break;
-      case 0o7: // August
+      case 7: // August
         eDay = 31;
         break;
-      case 08: // September
+      case 8: // September
         eDay = 30;
         break;
-      case 09: // October
+      case 9: // October
         eDay = 31;
         break;
       case 10: // November
@@ -84,21 +95,21 @@ export class WorkingDaysAppComponent implements OnInit {
         eDay = 31;
     }
 
-    // const eMonth = parseInt(document.querySelector('#month').value.split('-')[1]) - 1;
-    // const eYear = document.querySelector('#month').value.split('-')[0];
+    const eMonth = parseInt(this.mdate.split('-')[1]) - 1;
+    const eYear = this.mdate.split('-')[0];
 
-    // const startDate = new Date(sYear, sMonth, sDay);
-    // const endDate = new Date(eYear, eMonth, eDay);
+    const startDate = new Date(sYear, sMonth, sDay);
+    const endDate = new Date(eYear, eMonth, eDay);
 
-    // console.log("Start: " + startDate);
-    // console.log("End: " + endDate);
+    console.log("Start: " + startDate);
+    console.log("End: " + endDate);
 
-    // this.getBusinessDatesCount(startDate, endDate, 'Month');
+    this.getBusinessDatesCount(startDate, endDate, 'Month');
   }
 
-  getBusinessDatesCount(startDate: Date, endDate: number | Date, tab: string): any {
+  getBusinessDatesCount(startDate: Date, endDate: number | Date, tab: string): void {
     try {
-      let count = 0;
+      this.count = 0;
       const curDate = new Date(startDate.getTime());
       while (curDate <= endDate) {
         const dayOfWeek = curDate.getDay();
@@ -107,7 +118,7 @@ export class WorkingDaysAppComponent implements OnInit {
         const dateMonth = date.toString() + month.toString();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
           if (!(this.holidays.includes(dateMonth))) {
-            count++;
+            this.count++;
           }
         }
         curDate.setDate(curDate.getDate() + 1);
@@ -116,69 +127,45 @@ export class WorkingDaysAppComponent implements OnInit {
       curDate.setDate(curDate.getDate() - 1); // Revert back one day to calculate correctly bellow
 
       let daysOff = 0;
-      // if (tab === 'Month') {
-      //   daysOff = document.querySelector('#daysOffM').value;
-      //   console.log('Month ' + daysOff);
-      // } else if (tab === 'Days') {
-      //   daysOff = document.querySelector('#daysOffD').value;
-      //   console.log('Days ' + daysOff);
-      // }
+      if (tab === 'Month') {
+        daysOff = this.mdaysoff;
+      } else if (tab === 'Days') {
+        daysOff = this.mdaysoff;
+      }
 
       // Rotating holidays
-      count = count - daysOff;
+      this.count = this.count - daysOff;
       if (curDate.getMonth() === 3) { // Minus two days for April Easter
-        count = count - 2;
+        this.count = this.count - 2;
       } else if (curDate.getMonth() === 4) { // Minus one day for 1st of May
-        count = count - 1;
+        this.count = this.count - 1;
       } else if (curDate.getMonth() === 5) { // Minus one day for Agiou Pneumatos
-        count = count - 1;
+        this.count = this.count - 1;
       }
 
       if ((curDate.getFullYear() === 2024 && curDate.getMonth() === 1) || (curDate.getFullYear() === 2028 && curDate.getMonth() === 1)) { // Adds one day for Feb
-        count = count + 1;
+        this.count = this.count + 1;
       }
 
-      const wisDays = Math.ceil(count / 2); // Gets workinsync days
+      const wisDays = Math.ceil(this.count / 2); // Gets workinsync days
 
       if (daysOff > 0) {
-        if (count > 20) {
-          alert('Ουψψ αν και αδειούλα πήραμε τον ήπιαμε, έχουμε ' + count + ' εργάσιμες' + '\r\nΧώσε min ' + wisDays + ' μέρες office στο WorkinSync.');
-        } else if (count > 10 && count <= 20) {
-          alert('Την τσεπώσαμε την αδειούλα, έχουμε ' + count + ' εργάσιμες' + '\r\nΧώσε min ' + wisDays + ' μέρες office στο WorkinSync.');
+        if (this.count > 20) {
+          this.result = `Ουψψ αν και πήρες άδεια, έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
+        } else if (this.count > 10 && this.count <= 20) {
+          this.result = `Την τσέπωσες την αδειούλα, έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         } else {
-          alert(count + ' εργάσιμες' + '\r\nΧώσε min ' + wisDays + ' μέρες office στο WorkinSync.');
+          this.result = `Έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         }
       } else {
-        if (count > 20) {
-          alert('Ουψψ τον ήπιαμε, έχουμε ' + count + ' εργάσιμες' + '\r\nΧώσε min ' + wisDays + ' μέρες office στο WorkinSync.');
-        } else if (count > 16 && count <= 20) {
-          alert('Καλά σου έκατσε με τις αργιούλες, έχουμε ' + count + ' εργάσιμες' + '\r\nΧώσε min ' + wisDays + ' μέρες office στο WorkinSync.');
+        if (this.count > 20) {
+          this.result = `Ουψψ έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
+        } else if (this.count > 16 && this.count <= 20) {
+          this.result = `Καλά σου έκατσε με τις αργιούλες, έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         } else {
-          alert(count + ' εργάσιμες' + '\r\nΧώσε min ' + wisDays + ' μέρες office στο WorkinSync.');
+          this.result = `Έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         }
       }
-      return count;
     } catch (e) { }
   }
-
-  // openDatePicker(evt, pickerTypeName): void {
-  //   // Declare all variables
-  //   var i, tabcontent, tablinks;
-
-  //   // Get all elements with class="tabcontent" and hide them
-  //   tabcontent = document.getElementsByClassName("tabcontent");
-  //   for (i = 0; i < tabcontent.length; i++) {
-  //     tabcontent[i].style.display = "none";
-  //   }
-
-  //   // Get all elements with class="tablinks" and remove the class "active"
-  //   tablinks = document.getElementsByClassName("tablinks");
-  //   for (i = 0; i < tablinks.length; i++) {
-  //     tablinks[i].className = tablinks[i].className.replace(" active", "");
-  //   }
-
-  //   // Show the current tab, and add an "active" class to the button that opened the tab
-  //   document.getElementById(pickerTypeName).style.display = "block";
-  //   evt.currentTarget.className += " active";
-  // }
 }
