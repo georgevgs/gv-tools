@@ -13,6 +13,7 @@ export class WorkingDaysAppComponent implements OnInit {
   eddate: any;
   mdate: any;
   mdaysoff: number = 0;
+  ddaysoff: number = 0;
   count: number = 0;
   result: string = '';
 
@@ -27,6 +28,7 @@ export class WorkingDaysAppComponent implements OnInit {
   }
 
   holidays = ['10', '60', '72', '252', '157', '289', '2511', '2611']; // Greek public holidays
+  rotatingHolidays = ['223', '253', '24', '135']; // Greek public rotating holidays
 
   runDay(): void {
     const sDay = this.sddate.split('-')[2];
@@ -117,7 +119,7 @@ export class WorkingDaysAppComponent implements OnInit {
         const month = curDate.getMonth();
         const dateMonth = date.toString() + month.toString();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-          if (!(this.holidays.includes(dateMonth))) {
+          if (!(this.holidays.includes(dateMonth)) && !(this.rotatingHolidays.includes(dateMonth))) {
             this.count++;
           }
         }
@@ -129,23 +131,24 @@ export class WorkingDaysAppComponent implements OnInit {
       let daysOff = 0;
       if (tab === 'Month') {
         daysOff = this.mdaysoff;
+
+        // // Rotating holidays
+        // if (curDate.getMonth() === 3) { // Minus two days for April Easter
+        //   this.count = this.count - 2;
+        // } else if (curDate.getMonth() === 4) { // Minus one day for 1st of May
+        //   this.count = this.count - 1;
+        // } else if (curDate.getMonth() === 5) { // Minus one day for Agiou Pneumatos
+        //   this.count = this.count - 1;
+        // }
       } else if (tab === 'Days') {
-        daysOff = this.mdaysoff;
+        daysOff = this.ddaysoff;
       }
 
-      // Rotating holidays
       this.count = this.count - daysOff;
-      if (curDate.getMonth() === 3) { // Minus two days for April Easter
-        this.count = this.count - 2;
-      } else if (curDate.getMonth() === 4) { // Minus one day for 1st of May
-        this.count = this.count - 1;
-      } else if (curDate.getMonth() === 5) { // Minus one day for Agiou Pneumatos
-        this.count = this.count - 1;
-      }
 
-      if ((curDate.getFullYear() === 2024 && curDate.getMonth() === 1) || (curDate.getFullYear() === 2028 && curDate.getMonth() === 1)) { // Adds one day for Feb
-        this.count = this.count + 1;
-      }
+      // if ((curDate.getFullYear() === 2024 && curDate.getMonth() === 1) || (curDate.getFullYear() === 2028 && curDate.getMonth() === 1)) { // Adds one day for Feb
+      //   this.count = this.count + 1;
+      // }
 
       const wisDays = Math.ceil(this.count / 2); // Gets workinsync days
 
@@ -168,4 +171,8 @@ export class WorkingDaysAppComponent implements OnInit {
       }
     } catch (e) { }
   }
+
+  goToLink(url: string){
+    window.open(url, "_blank");
+}
 }
