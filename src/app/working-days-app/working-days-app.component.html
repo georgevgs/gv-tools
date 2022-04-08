@@ -47,27 +47,27 @@
   <div class="tab-content" id="monthTabContent">
     <div class="tab-pane fade show active" id="month" role="tabpanel" aria-labelledby="month-tab">
       <br>
-      <label for="start">Μήνας:</label>
-      <input type="month" id="month" [(ngModel)]="mdate" name="trip-month">
+      <label class="form-label" for="start">Μήνας:</label>
+      <input class="form-control" type="month" id="month" [(ngModel)]="mdate" name="trip-month">
 
-      <label for="daysOff">Μέρες άδειας:</label>
-      <input type="number" id="daysOffM" [(ngModel)]="mdaysoff" name="trip-daysOff" value="0" min="0">
+      <label class="form-label" for="daysOff">Μέρες άδειας:</label>
+      <input class="form-control" type="number" id="daysOffM" [(ngModel)]="mdaysoff" name="trip-daysOff" value="0" min="0">
         
-      <button (click)="runMonth()">
+      <button class="btn btn-outline-primary" (click)="runMonth()">
         Submit
       </button>
     </div>
     <div class="tab-pane fade" id="day" role="tabpanel" aria-labelledby="day-tab">
-      <label for="start">Αρχική ημερομηνία:</label>
-      <input type="date" id="start" name="trip-start" [(ngModel)]="sddate">
+      <label class="form-label" for="start">Αρχική ημερομηνία:</label>
+      <input class="form-control" type="date" id="start" name="trip-start" [(ngModel)]="sddate">
 
-      <label for="end">Τελική ημερομηνία:</label>
-      <input type="date" id="end" name="trip-end" [(ngModel)]="eddate">
+      <label class="form-label" for="end">Τελική ημερομηνία:</label>
+      <input class="form-control" type="date" id="end" name="trip-end" [(ngModel)]="eddate">
 
-      <label for="daysOff">Μέρες άδειας:</label>
-      <input type="number" id="daysOffD" [(ngModel)]="ddaysoff" name="trip-daysOff" value="0" min="0">
+      <label class="form-label" for="daysOff">Μέρες άδειας:</label>
+      <input class="form-control" type="number" id="daysOffD" [(ngModel)]="ddaysoff" name="trip-daysOff" value="0" min="0">
 
-      <button (click)="runDay()">
+      <button class="btn btn-outline-primary" (click)="runDay()">
         Submit
       </button>
     </div>

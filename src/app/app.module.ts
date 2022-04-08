@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { WorkingDaysAppComponent } from './working-days-app/working-days-app.component';
+import { EmailGeneratorComponent } from './email-generator/email-generator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    WorkingDaysAppComponent
+    WorkingDaysAppComponent,
+    EmailGeneratorComponent
   ],
   imports: [
     BrowserModule,

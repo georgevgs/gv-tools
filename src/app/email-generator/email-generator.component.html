@@ -1,0 +1,39 @@
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col">
+            <h2 class="shadow p-3 mb-5 bg-body rounded, d-inline-flex p-2">
+                PigiEmail
+                <img src="https://i1.wp.com/blog.contactpigeon.com/wp-content/uploads/2016/10/contactpigeon-logo-square.png?fit=450%2C450&ssl=1"
+                    alt="CP Pigeon" width="45" height="45">
+            </h2>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="emailtab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="email-tab" data-bs-toggle="tab" data-bs-target="#email" type="button"
+                role="tab" aria-controls="email" aria-selected="true">Temp email</button>
+        </li>
+    </ul>
+    <br>
+    <div class="tab-content" id="emailTabContent">
+        <div class="tab-pane fade show active" id="email" role="tabpanel" aria-labelledby="email-tab">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="email address" aria-label="email address"
+                    aria-describedby="basic-addon2" [(ngModel)]="email" readonly>
+                <div>
+                    <button class="btn btn-outline-secondary" type="button" (click)="copyText()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-clipboard-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-1Zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5v-1Zm-2 0h1v1A2.5 2.5 0 0 0 6.5 5h3A2.5 2.5 0 0 0 12 2.5v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2Z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-outline-primary" type="button" (click)="generateEmail()">Generate</button>
+
+</div>
