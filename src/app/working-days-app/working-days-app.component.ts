@@ -16,6 +16,7 @@ export class WorkingDaysAppComponent implements OnInit {
   ddaysoff: number = 0;
   count: number = 0;
   result: string = '';
+  multipleDates: any;
 
   ngOnInit(): void {
     const today = new Date();
@@ -171,8 +172,4 @@ export class WorkingDaysAppComponent implements OnInit {
       }
     } catch (e) { }
   }
-
-  goToLink(url: string){
-    window.open(url, "_blank");
-}
 }

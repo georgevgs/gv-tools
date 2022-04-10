@@ -1,0 +1,8 @@
+<mat-toolbar style="background-color:transparent">
+  <div class="flex-stretch"></div>
+  <mat-icon color="primary" class="mr-8">brightness_5</mat-icon>
+  <mat-slide-toggle [checked]="darkMode$ | async" (change)="onToggle()" class="mr-8">
+  </mat-slide-toggle>
+  <mat-icon color="accent">bedtime</mat-icon>
+</mat-toolbar>
+<br>
