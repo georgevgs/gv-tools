@@ -130,15 +130,30 @@
     </div>
   </div>
 
-  <mat-form-field class="form-control">
-    <label class="form-label" for="selectedDates">Επιλεγμένες μέρες στο WIS</label>
-    <ngx-multiple-dates [matDatepicker]="picker" name="wisDates" [(ngModel)]="multipleDates">
-    </ngx-multiple-dates>
-    <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
-  <br>
-  <br>
-  <button class="btn btn-outline-primary" (click)="saveWISDates()">
-    Save dates
-  </button>
+  <!-- <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+          aria-expanded="false" aria-controls="collapseOne">
+          Save your WIS Days - ALPHA
+        </button>
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <mat-form-field class="form-control">
+            <label class="form-label" for="selectedDates">Επιλεγμένες μέρες στο WIS</label>
+            <ngx-multiple-dates [matDatepicker]="picker" name="wisDates" [(ngModel)]="multipleDates">
+            </ngx-multiple-dates>
+            <mat-datepicker-toggle matPrefix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <br>
+          <br>
+          <button class="btn btn-outline-primary" (click)="saveWISDates()">
+            Save dates
+          </button>
+        </div>
+      </div>
+    </div>
+  </div> -->

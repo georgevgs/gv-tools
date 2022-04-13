@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 @Component({
   selector: 'app-working-days-app',
   templateUrl: './working-days-app.component.html',
@@ -18,8 +19,31 @@ export class WorkingDaysAppComponent implements OnInit {
   result: string = '';
   multipleDates: any;
   lssavedWISDays: any = [];
+  
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  firebaseConfig = {
+    apiKey: "AIzaSyBQTOkPEwXC2GDMxk2aAhnWDh3jKnJyLs0",
+    authDomain: "gv-tools-214fb.firebaseapp.com",
+    projectId: "gv-tools-214fb",
+    storageBucket: "gv-tools-214fb.appspot.com",
+    messagingSenderId: "878223652639",
+    appId: "1:878223652639:web:7ade5263d3b8f65f20222a",
+    measurementId: "G-YMESWHVZCP"
+  };
 
   ngOnInit(): void {
+    // Initialize Firebase
+    const app = initializeApp(this.firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // this.lssavedWISDays = localStorage.getItem('savedWISDays');
+    // this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+    // this.multipleDates = this.lssavedWISDays;
+  
     const today = new Date();
 
     if ((today.getMonth() + 1).toString().length === 1) {
@@ -133,24 +157,11 @@ export class WorkingDaysAppComponent implements OnInit {
       let daysOff = 0;
       if (tab === 'Month') {
         daysOff = this.mdaysoff;
-
-        // // Rotating holidays
-        // if (curDate.getMonth() === 3) { // Minus two days for April Easter
-        //   this.count = this.count - 2;
-        // } else if (curDate.getMonth() === 4) { // Minus one day for 1st of May
-        //   this.count = this.count - 1;
-        // } else if (curDate.getMonth() === 5) { // Minus one day for Agiou Pneumatos
-        //   this.count = this.count - 1;
-        // }
       } else if (tab === 'Days') {
         daysOff = this.ddaysoff;
       }
 
       this.count = this.count - daysOff;
-
-      // if ((curDate.getFullYear() === 2024 && curDate.getMonth() === 1) || (curDate.getFullYear() === 2028 && curDate.getMonth() === 1)) { // Adds one day for Feb
-      //   this.count = this.count + 1;
-      // }
 
       const wisDays = Math.ceil(this.count / 2); // Gets workinsync days
 
@@ -180,12 +191,15 @@ export class WorkingDaysAppComponent implements OnInit {
       this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
       if(this.lssavedWISDays.length > 0){
         this.lssavedWISDays.forEach((date: any) => {
-          this.multipleDates.push(date);   
+          if(!(this.multipleDates.includes(date))){
+            this.multipleDates.push(date);   
+          }
         });
         localStorage.setItem('savedWISDays', JSON.stringify(this.multipleDates));
         this.multipleDates = [];
         this.lssavedWISDays = localStorage.getItem('savedWISDays');
         this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+        // this.multipleDates = this.lssavedWISDays;
         alert(`You have added ${this.lssavedWISDays.length} so far in WIS`);
       }
     } else {
@@ -193,6 +207,7 @@ export class WorkingDaysAppComponent implements OnInit {
       this.multipleDates = [];
       this.lssavedWISDays = localStorage.getItem('savedWISDays');
       this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+      // this.multipleDates = this.lssavedWISDays;
       alert(`You have added ${this.lssavedWISDays.length} so far in WIS`);
     }
   }
