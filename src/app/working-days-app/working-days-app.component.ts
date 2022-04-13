@@ -17,6 +17,7 @@ export class WorkingDaysAppComponent implements OnInit {
   count: number = 0;
   result: string = '';
   multipleDates: any;
+  lssavedWISDays: any = [];
 
   ngOnInit(): void {
     const today = new Date();
@@ -49,7 +50,7 @@ export class WorkingDaysAppComponent implements OnInit {
     this.getBusinessDatesCount(startDate, endDate, 'Days');
   }
 
-  runMonth(): void {
+  runMonth(): void {    
     const sDay = 0o1;
     const sMonth = parseInt(this.mdate.split('-')[1]) - 1;
     const sYear = this.mdate.split('-')[0];
@@ -171,5 +172,28 @@ export class WorkingDaysAppComponent implements OnInit {
         }
       }
     } catch (e) { }
+  }
+
+  saveWISDates(): void {
+    if('savedWISDays' in localStorage){
+      this.lssavedWISDays = localStorage.getItem('savedWISDays');
+      this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+      if(this.lssavedWISDays.length > 0){
+        this.lssavedWISDays.forEach((date: any) => {
+          this.multipleDates.push(date);   
+        });
+        localStorage.setItem('savedWISDays', JSON.stringify(this.multipleDates));
+        this.multipleDates = [];
+        this.lssavedWISDays = localStorage.getItem('savedWISDays');
+        this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+        alert(`You have added ${this.lssavedWISDays.length} so far in WIS`);
+      }
+    } else {
+      localStorage.setItem('savedWISDays', JSON.stringify(this.multipleDates));
+      this.multipleDates = [];
+      this.lssavedWISDays = localStorage.getItem('savedWISDays');
+      this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+      alert(`You have added ${this.lssavedWISDays.length} so far in WIS`);
+    }
   }
 }
