@@ -8,6 +8,9 @@ import { ClipboardService } from 'ngx-clipboard';
 })
 export class EmailGeneratorComponent implements OnInit {
   email: string = '';
+  password: string = '';
+  name: string = 'Contact';
+  surname: string = 'Pigeon';
 
   constructor(
     private clipboardApi: ClipboardService
@@ -20,8 +23,24 @@ export class EmailGeneratorComponent implements OnInit {
     this.email = [...Array(15 + 10)].map((value) => (Math.random() * 1000000).toString(36).replace('.', '')).join('').substring(0, 15) + '@gvtools.work';
   }
 
+  generatePassword(): void {
+    this.password = [...Array(11 + 10)].map((value) => (Math.random() * 1000000).toString(36).replace('.', '')).join('').substring(0, 11);
+  }
+
   copyText(): void {
     this.clipboardApi.copyFromContent(this.email);
+  }
+
+  copyPassword(): void {
+    this.clipboardApi.copyFromContent(this.password);
+  }
+
+  copyName(): void {
+    this.clipboardApi.copyFromContent(this.name);
+  }
+
+  copySurname(): void {
+    this.clipboardApi.copyFromContent(this.surname);
   }
 
 }

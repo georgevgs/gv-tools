@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 @Component({
   selector: 'app-working-days-app',
   templateUrl: './working-days-app.component.html',
@@ -19,27 +17,8 @@ export class WorkingDaysAppComponent implements OnInit {
   result: string = '';
   multipleDates: any;
   lssavedWISDays: any = [];
-  
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  firebaseConfig = {
-    apiKey: "AIzaSyBQTOkPEwXC2GDMxk2aAhnWDh3jKnJyLs0",
-    authDomain: "gv-tools-214fb.firebaseapp.com",
-    projectId: "gv-tools-214fb",
-    storageBucket: "gv-tools-214fb.appspot.com",
-    messagingSenderId: "878223652639",
-    appId: "1:878223652639:web:7ade5263d3b8f65f20222a",
-    measurementId: "G-YMESWHVZCP"
-  };
 
   ngOnInit(): void {
-    // Initialize Firebase
-    const app = initializeApp(this.firebaseConfig);
-    const analytics = getAnalytics(app);
-
     // this.lssavedWISDays = localStorage.getItem('savedWISDays');
     // this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
     // this.multipleDates = this.lssavedWISDays;
