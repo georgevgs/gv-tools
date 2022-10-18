@@ -112,5 +112,7 @@
       }
     }
   },
-  "defaultProject": "gv-tools"
+  "cli": {
+    "analytics": false
+  }
 }
