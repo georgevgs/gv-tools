@@ -3,9 +3,12 @@
     <div class="row">
         <div class="col">
             <h2>
-                PigiData
-                <img src="https://i1.wp.com/blog.contactpigeon.com/wp-content/uploads/2016/10/contactpigeon-logo-square.png?fit=450%2C450&ssl=1"
-                    alt="CP Pigeon" width="45" height="45">
+                Data
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 448 512">
+                    <!--! Font Awesome Pro 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. -->
+                    <path
+                        d="M448 80v48c0 44.2-100.3 80-224 80S0 172.2 0 128V80C0 35.8 100.3 0 224 0S448 35.8 448 80zM393.2 214.7c20.8-7.4 39.9-16.9 54.8-28.6V288c0 44.2-100.3 80-224 80S0 332.2 0 288V186.1c14.9 11.8 34 21.2 54.8 28.6C99.7 230.7 159.5 240 224 240s124.3-9.3 169.2-25.3zM0 346.1c14.9 11.8 34 21.2 54.8 28.6C99.7 390.7 159.5 400 224 400s124.3-9.3 169.2-25.3c20.8-7.4 39.9-16.9 54.8-28.6V432c0 44.2-100.3 80-224 80S0 476.2 0 432V346.1z" />
+                </svg>
             </h2>
         </div>
     </div>
@@ -19,9 +22,15 @@
             <button class="nav-link" id="data-tab" data-bs-toggle="tab" data-bs-target="#data" type="button" role="tab"
                 aria-controls="data" aria-selected="false">Temp Data</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="encryption-data-tab" data-bs-toggle="tab" data-bs-target="#encryption-data"
+                type="button" role="tab" aria-controls="encryption-data" aria-selected="false">Encryption Data</button>
+        </li>
     </ul>
     <br>
     <div class="tab-content" id="emailTabContent">
+
+        <!-- *********  email generator ********* -->
         <div class="tab-pane fade show active" id="email" role="tabpanel" aria-labelledby="email-tab">
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="email address" aria-label="email address"
@@ -41,6 +50,8 @@
             <button *ngIf="email" class="btn btn-outline-primary" type="button"
                 (click)="generateEmail()">Regenerate</button>
         </div>
+
+        <!-- *********  data generator ********* -->
         <div class="tab-pane fade show" id="data" role="tabpanel" aria-labelledby="data-tab">
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="password" aria-label="password"
@@ -87,6 +98,66 @@
                                 d="M10 1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-1Zm-5 0A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5v1A1.5 1.5 0 0 1 9.5 4h-3A1.5 1.5 0 0 1 5 2.5v-1Zm-2 0h1v1A2.5 2.5 0 0 0 6.5 5h3A2.5 2.5 0 0 0 12 2.5v-1h1a2 2 0 0 1 2 2V14a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V3.5a2 2 0 0 1 2-2Z" />
                         </svg>
                     </button>
+                </div>
+            </div>
+        </div>
+         
+        <!-- *********  encryption ********* -->
+        <div class="tab-pane fade show" id="encryption-data" role="tabpanel" aria-labelledby="encryption-data-tab">
+            <div class="row">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Encrypt your data
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="form-group">
+                                    <textarea type="text" class="form-control" rows="3"
+                                        placeholder="Enter text you want to encrypt" [(ngModel)]="plainText">
+                                </textarea>
+                                    <input type="password" class="form-control" placeholder="Enter encryption password"
+                                        [(ngModel)]="encPassword">
+                                    <br>
+                                    <textarea class="form-control" readonly (click)="copyEncryptTextarea()"
+                                        rows="4">{{conversionEncryptOutput}}</textarea>
+                                    <br>
+                                    <button type="button" class="btn btn-outline-primary float-right"
+                                        (click)="convertText('encrypt')">Encrypt</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Decrypt your data
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="form-group">
+                                    <textarea type="text" class="form-control" rows="3"
+                                        placeholder="Enter text you want to decrypt" [(ngModel)]="encryptText">
+                                </textarea>
+                                    <input type="password" class="form-control" placeholder="Enter decryption password"
+                                        [(ngModel)]="decPassword">
+                                    <br>
+                                    <textarea class="form-control" readonly (click)="copyDecryptTextarea()"
+                                        rows="4">{{conversionDecryptOutput}}</textarea>
+                                    <br>
+                                    <button type="button" class="btn btn-outline-primary float-right"
+                                        (click)="convertText('decrypt')">Decrypt</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

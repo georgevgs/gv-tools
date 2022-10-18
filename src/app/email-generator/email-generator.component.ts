@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
+import * as CryptoJS from 'crypto-js';
 
 @Component({
   selector: 'app-email-generator',
@@ -11,6 +12,12 @@ export class EmailGeneratorComponent implements OnInit {
   password: string = '';
   name: string = 'Contact';
   surname: string = 'Pigeon';
+  plainText!: string;  
+  encryptText!: string;  
+  encPassword!: string;  
+  decPassword!: string;  
+  conversionEncryptOutput: string = '';  
+  conversionDecryptOutput: string = '';  
 
   constructor(
     private clipboardApi: ClipboardService
@@ -43,4 +50,19 @@ export class EmailGeneratorComponent implements OnInit {
     this.clipboardApi.copyFromContent(this.surname);
   }
 
+  copyEncryptTextarea(): void {
+    this.clipboardApi.copyFromContent(this.conversionEncryptOutput);
+  }
+
+  copyDecryptTextarea(): void {
+    this.clipboardApi.copyFromContent(this.conversionDecryptOutput);
+  }
+
+  convertText(conversion:string) {  
+    if (conversion=="encrypt") {  
+      this.conversionEncryptOutput = CryptoJS.AES.encrypt(this.plainText.trim(), this.encPassword.trim()).toString();  
+    } else {  
+      this.conversionDecryptOutput = CryptoJS.AES.decrypt(this.encryptText.trim(), this.decPassword.trim()).toString(CryptoJS.enc.Utf8);  
+    }
+  }  
 }
