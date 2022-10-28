@@ -26,36 +26,20 @@ export class EmailGeneratorComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  generateRandomString(strLength: number): string {
+    return [...Array(strLength + 10)].map((value) => (Math.random() * 1000000).toString(36).replace('.', '')).join('').substring(0, strLength);
+  }
+
   generateEmail(): void {
-    this.email = [...Array(15 + 10)].map((value) => (Math.random() * 1000000).toString(36).replace('.', '')).join('').substring(0, 15) + '@gvtools.work';
+    this.email =  this.generateRandomString(15) + '@gvtools.work';
   }
 
   generatePassword(): void {
-    this.password = [...Array(11 + 10)].map((value) => (Math.random() * 1000000).toString(36).replace('.', '')).join('').substring(0, 11);
+    this.password = this.generateRandomString(11);
   }
 
-  copyText(): void {
-    this.clipboardApi.copyFromContent(this.email);
-  }
-
-  copyPassword(): void {
-    this.clipboardApi.copyFromContent(this.password);
-  }
-
-  copyName(): void {
-    this.clipboardApi.copyFromContent(this.name);
-  }
-
-  copySurname(): void {
-    this.clipboardApi.copyFromContent(this.surname);
-  }
-
-  copyEncryptTextarea(): void {
-    this.clipboardApi.copyFromContent(this.conversionEncryptOutput);
-  }
-
-  copyDecryptTextarea(): void {
-    this.clipboardApi.copyFromContent(this.conversionDecryptOutput);
+  copyText(elementToCopy: string): void {
+    this.clipboardApi.copyFromContent(elementToCopy);
   }
 
   convertText(conversion:string) {  
