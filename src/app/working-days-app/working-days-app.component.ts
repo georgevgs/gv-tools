@@ -147,7 +147,7 @@ export class WorkingDaysAppComponent implements OnInit {
       if (daysOff > 0) {
         if (this.count > 20) {
           this.result = `Ουψψ αν και πήρες άδεια, έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
-        } else if (this.count > 10 && this.count <= 20) {
+        } else if (this.count > 10) {
           this.result = `Την τσέπωσες την αδειούλα, έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         } else {
           this.result = `Έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
@@ -155,7 +155,7 @@ export class WorkingDaysAppComponent implements OnInit {
       } else {
         if (this.count > 20) {
           this.result = `Ουψψ έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
-        } else if (this.count > 16 && this.count <= 20) {
+        } else if (this.count > 16) {
           this.result = `Καλά σου έκατσε με τις αργιούλες, έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         } else {
           this.result = `Έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
