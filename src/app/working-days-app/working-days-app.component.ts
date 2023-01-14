@@ -19,9 +19,9 @@ export class WorkingDaysAppComponent implements OnInit {
   lssavedWISDays: any = [];
 
   ngOnInit(): void {
-    // this.lssavedWISDays = localStorage.getItem('savedWISDays');
-    // this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
-    // this.multipleDates = this.lssavedWISDays;
+    this.lssavedWISDays = localStorage.getItem('savedWISDays');
+    this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
+    this.multipleDates = this.lssavedWISDays;
   
     const today = new Date();
 
@@ -162,32 +162,5 @@ export class WorkingDaysAppComponent implements OnInit {
         }
       }
     } catch (e) { }
-  }
-
-  saveWISDates(): void {
-    if('savedWISDays' in localStorage){
-      this.lssavedWISDays = localStorage.getItem('savedWISDays');
-      this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
-      if(this.lssavedWISDays.length > 0){
-        this.lssavedWISDays.forEach((date: any) => {
-          if(!(this.multipleDates.includes(date))){
-            this.multipleDates.push(date);   
-          }
-        });
-        localStorage.setItem('savedWISDays', JSON.stringify(this.multipleDates));
-        this.multipleDates = [];
-        this.lssavedWISDays = localStorage.getItem('savedWISDays');
-        this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
-        // this.multipleDates = this.lssavedWISDays;
-        alert(`You have added ${this.lssavedWISDays.length} so far in WIS`);
-      }
-    } else {
-      localStorage.setItem('savedWISDays', JSON.stringify(this.multipleDates));
-      this.multipleDates = [];
-      this.lssavedWISDays = localStorage.getItem('savedWISDays');
-      this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
-      // this.multipleDates = this.lssavedWISDays;
-      alert(`You have added ${this.lssavedWISDays.length} so far in WIS`);
-    }
   }
 }
