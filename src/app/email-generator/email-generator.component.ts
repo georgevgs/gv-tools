@@ -5,7 +5,7 @@ import * as CryptoJS from 'crypto-js';
 @Component({
   selector: 'app-email-generator',
   templateUrl: './email-generator.component.html',
-  styleUrls: ['./email-generator.component.css']
+  styleUrls: ['./email-generator.component.scss']
 })
 export class EmailGeneratorComponent implements OnInit {
   email: string = '';

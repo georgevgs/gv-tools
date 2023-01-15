@@ -14,6 +14,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMultipleDatesModule } from 'ngx-multiple-dates';
 import { MatNativeDateModule } from '@angular/material/core';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatNativeDateModule,
     MatFormFieldModule,
     NgxMultipleDatesModule,
+    MatCardModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

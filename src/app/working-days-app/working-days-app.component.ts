@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { DateRemoveEvent } from 'ngx-multiple-dates';
 @Component({
   selector: 'app-working-days-app',
   templateUrl: './working-days-app.component.html',
-  styleUrls: ['./working-days-app.component.css']
+  styleUrls: ['./working-days-app.component.scss']
 })
 export class WorkingDaysAppComponent implements OnInit {
 
@@ -16,14 +18,33 @@ export class WorkingDaysAppComponent implements OnInit {
   count: number = 0;
   result: string = '';
   multipleDates: any;
-  lssavedWISDays: any = [];
+  submittedDatesLS: any = [];
+  submittedDates: Date[] = [];
+  oldDateLength = this.submittedDates.length;
+  minDate!: Date;
+  maxDate!: Date;
 
   ngOnInit(): void {
-    this.lssavedWISDays = localStorage.getItem('savedWISDays');
-    this.lssavedWISDays = JSON.parse(this.lssavedWISDays);
-    this.multipleDates = this.lssavedWISDays;
-  
     const today = new Date();
+
+    this.minDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    this.maxDate = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+    this.submittedDatesLS = localStorage.getItem('submittedDatesLS');
+    this.submittedDatesLS = JSON.parse(this.submittedDatesLS);
+    if(this.submittedDatesLS){
+      this.submittedDatesLS.forEach((date: Date) => {
+        this.submittedDates.push(new Date(date));
+      });
+      
+      const submittedDatesTimestampLS = new Date(localStorage.getItem('submittedDatesTimestampLS')!);
+      if(submittedDatesTimestampLS){
+        if(today.getMonth() != submittedDatesTimestampLS.getMonth()){
+          localStorage.removeItem('submittedDatesLS');
+          this.submittedDates = [];
+        }
+      }
+    }
 
     if ((today.getMonth() + 1).toString().length === 1) {
       this.mdate = today.getFullYear() + '-0' + (today.getMonth() + 1);
@@ -32,8 +53,8 @@ export class WorkingDaysAppComponent implements OnInit {
     }
   }
 
-  holidays = ['10', '60', '72', '252', '157', '289', '2511', '2611']; // Greek public holidays
-  rotatingHolidays = ['223', '253', '24', '135']; // Greek public rotating holidays
+  holidays = ['10', '60', '252', '14', '157', '289', '2511', '2611']; // Greek public holidays
+  rotatingHolidays = ['271', '143', '173', '55']; // Greek public rotating holidays 2023
 
   runDay(): void {
     const sDay = this.sddate.split('-')[2];
@@ -46,9 +67,6 @@ export class WorkingDaysAppComponent implements OnInit {
 
     const startDate = new Date(sYear, sMonth, sDay);
     const endDate = new Date(eYear, eMonth, eDay);
-
-    console.log("Start: " + startDate);
-    console.log("End: " + endDate);
 
     this.getBusinessDatesCount(startDate, endDate, 'Days');
   }
@@ -108,9 +126,6 @@ export class WorkingDaysAppComponent implements OnInit {
     const startDate = new Date(sYear, sMonth, sDay);
     const endDate = new Date(eYear, eMonth, eDay);
 
-    console.log("Start: " + startDate);
-    console.log("End: " + endDate);
-
     this.getBusinessDatesCount(startDate, endDate, 'Month');
   }
 
@@ -162,5 +177,17 @@ export class WorkingDaysAppComponent implements OnInit {
         }
       }
     } catch (e) { }
+  }
+
+  dateHandler(): void {
+    // if(this.submittedDates.length > this.oldDateLength){
+    //   console.log('added');
+    // } else {
+    //   console.log('removed');
+    // }
+    // this.oldDateLength = this.submittedDates.length;
+    localStorage.removeItem('submittedDatesLS');
+    localStorage.setItem('submittedDatesLS', JSON.stringify(this.submittedDates));
+    localStorage.setItem('submittedDatesTimestampLS', JSON.stringify(new Date().getMonth()));
   }
 }
