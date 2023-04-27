@@ -15,13 +15,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { NgxMultipleDatesModule } from 'ngx-multiple-dates';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+import { TimerComponent } from './timer/timer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WorkingDaysAppComponent,
     EmailGeneratorComponent,
-    DarkModeToggleComponent
+    DarkModeToggleComponent,
+    TimerComponent
   ],
   imports: [
     BrowserModule,

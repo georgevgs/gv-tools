@@ -10,7 +10,7 @@ import * as CryptoJS from 'crypto-js';
 export class EmailGeneratorComponent implements OnInit {
   email: string = '';
   password: string = '';
-  name: string = 'Contact';
+  name: any;
   surname: string = 'Pigeon';
   plainText!: string;
   encryptText!: string;
@@ -21,7 +21,9 @@ export class EmailGeneratorComponent implements OnInit {
 
   constructor(private clipboardApi: ClipboardService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.fetchNames('male');
+  }
 
   generateRandomString(strLength: number, isPassword: boolean): string {
     if (isPassword) {
@@ -69,5 +71,22 @@ export class EmailGeneratorComponent implements OnInit {
         this.decPassword.trim()
       ).toString(CryptoJS.enc.Utf8);
     }
+  }
+
+  async fetchData(url: string) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      this.name = response.json();
+      return response.json();
+    } catch (error) {
+      console.error('Unable to fetch data:', error);
+    }
+  }
+
+  fetchNames(nameType: string) {
+    return this.fetchData(`https://www.randomlists.com/data/names-${nameType}.json`);
   }
 }

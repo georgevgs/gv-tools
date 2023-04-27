@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DateRemoveEvent } from 'ngx-multiple-dates';
+import { Subscription, interval } from 'rxjs';
+
 @Component({
   selector: 'app-working-days-app',
   templateUrl: './working-days-app.component.html',
-  styleUrls: ['./working-days-app.component.scss']
+  styleUrls: ['./working-days-app.component.scss'],
 })
 export class WorkingDaysAppComponent implements OnInit {
-
-  constructor() { }
+  constructor() {}
 
   sddate: any;
   eddate: any;
@@ -23,6 +24,22 @@ export class WorkingDaysAppComponent implements OnInit {
   oldDateLength = this.submittedDates.length;
   minDate!: Date;
   maxDate!: Date;
+  timerHasNotStarted = true;
+
+  private subscription!: Subscription;
+
+  public dateNow = new Date();
+  public dDay =  this.addHours(this.dateNow, 8);
+
+  milliSecondsInASecond = 1000;
+  hoursInADay = 24;
+  minutesInAnHour = 60;
+  SecondsInAMinute = 60;
+
+  public timeDifference!: number;
+  public secondsToDday: number = 0;
+  public minutesToDday: number = 0;
+  public hoursToDday: number = 8;
 
   ngOnInit(): void {
     const today = new Date();
@@ -32,14 +49,16 @@ export class WorkingDaysAppComponent implements OnInit {
 
     this.submittedDatesLS = localStorage.getItem('submittedDatesLS');
     this.submittedDatesLS = JSON.parse(this.submittedDatesLS);
-    if(this.submittedDatesLS){
+    if (this.submittedDatesLS) {
       this.submittedDatesLS.forEach((date: Date) => {
         this.submittedDates.push(new Date(date));
       });
-      
-      const submittedDatesTimestampLS = new Date(localStorage.getItem('submittedDatesTimestampLS')!);
-      if(submittedDatesTimestampLS){
-        if(today.getMonth() != submittedDatesTimestampLS.getMonth()){
+
+      const submittedDatesTimestampLS = new Date(
+        localStorage.getItem('submittedDatesTimestampLS')!
+      );
+      if (submittedDatesTimestampLS) {
+        if (today.getMonth() != submittedDatesTimestampLS.getMonth()) {
           localStorage.removeItem('submittedDatesLS');
           this.submittedDates = [];
         }
@@ -51,6 +70,10 @@ export class WorkingDaysAppComponent implements OnInit {
     } else {
       this.mdate = today.getFullYear() + '-' + (today.getMonth() + 1);
     }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   holidays = ['10', '60', '252', '14', '157', '289', '2511', '2611']; // Greek public holidays
@@ -71,7 +94,7 @@ export class WorkingDaysAppComponent implements OnInit {
     this.getBusinessDatesCount(startDate, endDate, 'Days');
   }
 
-  runMonth(): void {    
+  runMonth(): void {
     const sDay = 0o1;
     const sMonth = parseInt(this.mdate.split('-')[1]) - 1;
     const sYear = this.mdate.split('-')[0];
@@ -129,7 +152,11 @@ export class WorkingDaysAppComponent implements OnInit {
     this.getBusinessDatesCount(startDate, endDate, 'Month');
   }
 
-  getBusinessDatesCount(startDate: Date, endDate: number | Date, tab: string): void {
+  getBusinessDatesCount(
+    startDate: Date,
+    endDate: number | Date,
+    tab: string
+  ): void {
     try {
       this.count = 0;
       const curDate = new Date(startDate.getTime());
@@ -139,7 +166,10 @@ export class WorkingDaysAppComponent implements OnInit {
         const month = curDate.getMonth();
         const dateMonth = date.toString() + month.toString();
         if (dayOfWeek !== 0 && dayOfWeek !== 6) {
-          if (!(this.holidays.includes(dateMonth)) && !(this.rotatingHolidays.includes(dateMonth))) {
+          if (
+            !this.holidays.includes(dateMonth) &&
+            !this.rotatingHolidays.includes(dateMonth)
+          ) {
             this.count++;
           }
         }
@@ -176,7 +206,7 @@ export class WorkingDaysAppComponent implements OnInit {
           this.result = `Έχεις ${this.count} εργάσιμες. Βάλε κατ' ελάχιστο ${wisDays} μέρες Work From Office στο WorkinSync.`;
         }
       }
-    } catch (e) { }
+    } catch (e) {}
   }
 
   dateHandler(): void {
@@ -187,7 +217,49 @@ export class WorkingDaysAppComponent implements OnInit {
     // }
     // this.oldDateLength = this.submittedDates.length;
     localStorage.removeItem('submittedDatesLS');
-    localStorage.setItem('submittedDatesLS', JSON.stringify(this.submittedDates));
-    localStorage.setItem('submittedDatesTimestampLS', JSON.stringify(new Date().getMonth()));
+    localStorage.setItem(
+      'submittedDatesLS',
+      JSON.stringify(this.submittedDates)
+    );
+    localStorage.setItem(
+      'submittedDatesTimestampLS',
+      JSON.stringify(new Date().getMonth())
+    );
+  }
+
+  private getTimeDifference() {
+    this.timeDifference = this.dDay.getTime() - new Date().getTime();
+    this.allocateTimeUnits(this.timeDifference);
+  }
+
+  private allocateTimeUnits(timeDifference: number) {
+    this.secondsToDday = Math.floor(
+      (timeDifference / this.milliSecondsInASecond) % this.SecondsInAMinute
+    );
+    this.minutesToDday = Math.floor(
+      (timeDifference / (this.milliSecondsInASecond * this.minutesInAnHour)) %
+        this.SecondsInAMinute
+    );
+    this.hoursToDday = Math.floor(
+      (timeDifference /
+        (this.milliSecondsInASecond *
+          this.minutesInAnHour *
+          this.SecondsInAMinute)) %
+        this.hoursInADay
+    );
+  }
+
+  startTimer() {
+    this.subscription = interval(1000).subscribe((x) => {
+      this.getTimeDifference();
+    });
+
+    this.timerHasNotStarted = false;
+  }
+
+  addHours(date: Date, hours: number) {
+    date.setHours(date.getHours() + hours);
+  
+    return date;
   }
 }

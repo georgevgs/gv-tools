@@ -41,6 +41,10 @@
       <button class="nav-link" id="submittedDays-tab" data-bs-toggle="tab" data-bs-target="#submittedDays" type="button"
         role="tab" aria-controls="submittedDays" aria-selected="false">Submitted Days</button>
     </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="time-tab" data-bs-toggle="tab" data-bs-target="#time" type="button" role="tab"
+        aria-controls="time" aria-selected="false">Time Card</button>
+    </li>
   </ul>
   <div class="tab-content" id="monthTabContent">
     <div class="tab-pane fade show active" id="month" role="tabpanel" aria-labelledby="month-tab">
@@ -91,6 +95,18 @@
           <pre *ngIf="submittedDates.length === 1">You have been {{ submittedDates.length }} time in office month</pre>
         </mat-card-content>
       </mat-card>
+    </div>
+    <div class="tab-pane fade" id="time" role="tabpanel" aria-labelledby="time-tab">
+      <h2>
+        Track your day:
+      </h2>
+      <span class="counter" id="hours"> {{hoursToDday}} </span>hrs
+      <span class="counter" id="minutes"> {{minutesToDday}} </span>min
+      <span class="counter" id="seconds"> {{secondsToDday}} </span>sec
+
+      <button *ngIf="timerHasNotStarted;" class="btn btn-outline-primary" (click)="startTimer()">
+        Start
+      </button>
     </div>
   </div>
   <br>
