@@ -23,7 +23,7 @@ export class EmailGeneratorComponent implements OnInit {
   constructor(private clipboardApi: ClipboardService) {}
 
   ngOnInit(): void {
-    this.fetchNames('male');
+    this.generateName();
   }
 
   generateRandomString(strLength: number, isPassword: boolean): string {
@@ -74,28 +74,38 @@ export class EmailGeneratorComponent implements OnInit {
     }
   }
 
-  async fetchNames(nameType: string) {
-    try {
-      const url = `https://www.randomlists.com/data/names-${nameType}.json`;
+  fetchNames(nameType: string) {
+    let names: any = [];
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Request-Headers': 'X-Requested-With, accept, content-type',
-          'Access-Control-Request-Method': 'GET, POST',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      this.name = response.json();
-      return response.json();
-    } catch (error) {
-      console.error('Unable to fetch data:', error);
+    switch (nameType) {
+      case 'female':
+        names = ['Maria', 'Nushi', 'Anna', 'Sara', 'Sofia'];
+        break;
+      case 'male':
+        names = ['John', 'Jose', 'Wei', 'Ali', 'George'];
+        break;
+      case 'surnames':
+        names = ['Wang', 'Zhang', 'Rodriguez', 'Papadopoulos', 'Smith'];
+        break;
     }
+
+    return { data: names };
+  }
+
+  generateName() {
+    // Fetch the names
+    const firstNames = this.fetchNames(this.pickRandom(['male', 'female']));
+    const lastNames = this.fetchNames('surnames');
+
+    // Pick a random name from each list
+    const firstName = this.pickRandom(firstNames.data);
+    const lastName = this.pickRandom(lastNames.data);
+
+    this.name = firstName;
+    this.surname = lastName;
+  }
+
+  pickRandom(list: any) {
+    return list[Math.floor(Math.random() * list.length)];
   }
 }
