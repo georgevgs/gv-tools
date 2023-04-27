@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-import { DateRemoveEvent } from 'ngx-multiple-dates';
 import { Subscription, interval } from 'rxjs';
 
 @Component({
@@ -88,7 +86,24 @@ export class WorkingDaysAppComponent implements OnInit {
   }
 
   holidays = ['10', '60', '252', '14', '157', '289', '2511', '2611']; // Greek public holidays
-  rotatingHolidays = ['271', '143', '173', '55']; // Greek public rotating holidays 2023
+  rotatingHolidays: string[] = []; // Greek public rotating holidays
+
+  calculateOrthodoxEaster(year: number) {
+    const a = year % 4;
+    const b = year % 7;
+    const c = year % 19;
+    const d = (19 * c + 15) % 30;
+    const e = (2 * a + 4 * b - d + 34) % 7;
+
+    const month = Math.floor((d + e + 114) / 31);
+    const day = ((d + e + 114) % 31) + 1;
+    const julianDate = new Date(Date.UTC(year, month - 1, day - 1));
+    const daysToAdd = 13 - julianDate.getUTCDay();
+
+    const orthodoxEaster = new Date(Date.UTC(year, month - 1, day + daysToAdd));
+
+    return orthodoxEaster;
+  }
 
   runDay(): void {
     const sDay = this.sddate.split('-')[2];
@@ -170,6 +185,41 @@ export class WorkingDaysAppComponent implements OnInit {
   ): void {
     try {
       this.count = 0;
+
+      // *** Calculate rotating holidays in Greece START ***
+      const currentYear = new Date().getFullYear();
+      const currentEaster = this.calculateOrthodoxEaster(currentYear);
+
+      const cleanMondayDate = new Date(
+        currentEaster.getTime() - 48 * 24 * 60 * 60 * 1000
+      );
+      const cleanMonday =
+        cleanMondayDate.getDate().toString() +
+        cleanMondayDate.getMonth().toString();
+
+      const bigFriday =
+        (currentEaster.getDate() - 2).toString() +
+        currentEaster.getMonth().toString();
+
+      const easterMonday =
+        (currentEaster.getDate() + 1).toString() +
+        currentEaster.getMonth().toString();
+
+      const whitMondayDate = new Date(
+        currentEaster.getTime() + 50 * 24 * 60 * 60 * 1000
+      );
+      const whitMonday =
+        whitMondayDate.getDate().toString() +
+        whitMondayDate.getMonth().toString();
+
+      this.rotatingHolidays.push(
+        cleanMonday,
+        bigFriday,
+        easterMonday,
+        whitMonday
+      );
+      // *** Calculate rotating holidays in Greece END ***
+
       const curDate = new Date(startDate.getTime());
       while (curDate <= endDate) {
         const dayOfWeek = curDate.getDay();
@@ -268,6 +318,7 @@ export class WorkingDaysAppComponent implements OnInit {
       this.timerHasNotStarted = true;
 
       localStorage.removeItem('dDay');
+      this.ngOnInit();
     }
   }
 
