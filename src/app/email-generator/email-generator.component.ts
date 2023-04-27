@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
 import * as CryptoJS from 'crypto-js';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-email-generator',
@@ -73,20 +74,28 @@ export class EmailGeneratorComponent implements OnInit {
     }
   }
 
-  async fetchData(url: string) {
+  async fetchNames(nameType: string) {
     try {
-      const response = await fetch(url);
+      const url = `https://www.randomlists.com/data/names-${nameType}.json`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Request-Headers': 'X-Requested-With, accept, content-type',
+          'Access-Control-Request-Method': 'GET, POST',
+        },
+      });
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
+
       this.name = response.json();
       return response.json();
     } catch (error) {
       console.error('Unable to fetch data:', error);
     }
-  }
-
-  fetchNames(nameType: string) {
-    return this.fetchData(`https://www.randomlists.com/data/names-${nameType}.json`);
   }
 }
