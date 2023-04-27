@@ -259,7 +259,11 @@ export class WorkingDaysAppComponent implements OnInit {
         this.hoursInADay
     );
 
-    if(this.secondsToDday === 0 && this.minutesToDday === 0 && this.hoursToDday === 0){
+    if (
+      this.secondsToDday === 0 &&
+      this.minutesToDday === 0 &&
+      this.hoursToDday === 0
+    ) {
       this.subscription.unsubscribe();
       this.timerHasNotStarted = true;
 
