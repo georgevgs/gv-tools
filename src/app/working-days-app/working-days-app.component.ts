@@ -29,7 +29,7 @@ export class WorkingDaysAppComponent implements OnInit {
   private subscription!: Subscription;
 
   public dateNow = new Date();
-  public dDay =  this.addHours(this.dateNow, 8);
+  public dDay: any;
 
   milliSecondsInASecond = 1000;
   hoursInADay = 24;
@@ -42,6 +42,17 @@ export class WorkingDaysAppComponent implements OnInit {
   public hoursToDday: number = 8;
 
   ngOnInit(): void {
+    if ('dDay' in localStorage) {
+      this.dDay = localStorage.getItem('dDay');
+      this.dDay = new Date(this.dDay);
+
+      this.timerHasNotStarted = false;
+      this.startTimer();
+    } else {
+      this.dDay = this.addHours(this.dateNow, 8);
+      localStorage.setItem('dDay', this.dDay.toString());
+    }
+
     const today = new Date();
 
     this.minDate = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -247,6 +258,13 @@ export class WorkingDaysAppComponent implements OnInit {
           this.SecondsInAMinute)) %
         this.hoursInADay
     );
+
+    if(this.secondsToDday === 0 && this.minutesToDday === 0 && this.hoursToDday === 0){
+      this.subscription.unsubscribe();
+      this.timerHasNotStarted = true;
+
+      localStorage.removeItem('dDay');
+    }
   }
 
   startTimer() {
@@ -259,7 +277,7 @@ export class WorkingDaysAppComponent implements OnInit {
 
   addHours(date: Date, hours: number) {
     date.setHours(date.getHours() + hours);
-  
+
     return date;
   }
 }
