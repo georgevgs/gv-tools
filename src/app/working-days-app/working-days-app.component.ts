@@ -85,8 +85,7 @@ export class WorkingDaysAppComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  // TODO add May 1st to next working day if it is a Sunday
-  holidays = ['10', '60', '252', '14', '157', '289', '2511', '2611']; // Greek public holidays
+  holidays = ['10', '60', '252', '157', '289', '2511', '2611']; // Greek public holidays
   rotatingHolidays: string[] = []; // Greek public rotating holidays
 
   calculateOrthodoxEaster(year: number) {
@@ -220,6 +219,21 @@ export class WorkingDaysAppComponent implements OnInit {
         whitMonday
       );
       // *** Calculate rotating holidays in Greece END ***
+
+      // *** Calculate first of May START ***
+      const firstMayDate = new Date(`${currentYear}-05-01`);
+
+      if (firstMayDate.getDay() === 6) {
+        // Saturday is 6, Sunday is 0
+        firstMayDate.setDate(firstMayDate.getDate() + 2); // add 2 days to get the first working day (Monday)
+      } else if (firstMayDate.getDay() === 0) {
+        firstMayDate.setDate(firstMayDate.getDate() + 1); // add 1 day to get the first working day (Monday)
+      }
+
+      const firstMay =
+        firstMayDate.getDate().toString() + firstMayDate.getMonth().toString();
+      this.holidays.push(firstMay);
+      // *** Calculate first of May END ***
 
       const curDate = new Date(startDate.getTime());
       while (curDate <= endDate) {
