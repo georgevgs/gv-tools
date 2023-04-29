@@ -85,6 +85,7 @@ export class WorkingDaysAppComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
+  // TODO add May 1st to next working day if it is a Sunday
   holidays = ['10', '60', '252', '14', '157', '289', '2511', '2611']; // Greek public holidays
   rotatingHolidays: string[] = []; // Greek public rotating holidays
 
@@ -310,9 +311,9 @@ export class WorkingDaysAppComponent implements OnInit {
     );
 
     if (
-      this.secondsToDday === 0 &&
-      this.minutesToDday === 0 &&
-      this.hoursToDday === 0
+      this.secondsToDday <= 0 &&
+      this.minutesToDday <= 0 &&
+      this.hoursToDday <= 0
     ) {
       this.subscription.unsubscribe();
       this.timerHasNotStarted = true;
@@ -323,11 +324,25 @@ export class WorkingDaysAppComponent implements OnInit {
   }
 
   startTimer() {
+    localStorage.removeItem('dDay');
+    this.dDay = this.addHours(new Date(), 8);
+    localStorage.setItem('dDay', this.dDay.toString());
+
     this.subscription = interval(1000).subscribe((x) => {
       this.getTimeDifference();
     });
 
     this.timerHasNotStarted = false;
+  }
+
+  resetTimer() {
+    this.subscription.unsubscribe();
+    this.timerHasNotStarted = true;
+    localStorage.removeItem('dDay');
+
+    this.hoursToDday = 8;
+    this.minutesToDday = 0;
+    this.secondsToDday = 0;
   }
 
   addHours(date: Date, hours: number) {

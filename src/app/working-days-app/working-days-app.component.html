@@ -100,12 +100,17 @@
       <h2>
         Track your day:
       </h2>
-      <span class="counter" id="hours"> {{hoursToDday}} </span>hrs
-      <span class="counter" id="minutes"> {{minutesToDday}} </span>min
-      <span class="counter" id="seconds"> {{secondsToDday}} </span>sec
+      <h2>
+        <span class="counter" id="hours"> {{hoursToDday}} </span>hrs
+        <span class="counter" id="minutes"> {{minutesToDday}} </span>min
+        <span class="counter" id="seconds"> {{secondsToDday}} </span>sec
+      </h2>
 
       <button *ngIf="timerHasNotStarted;" class="btn btn-outline-primary" (click)="startTimer()">
         Start
+      </button>
+      <button *ngIf="!timerHasNotStarted;" class="btn btn-outline-primary" (click)="resetTimer()">
+        Reset
       </button>
     </div>
   </div>
