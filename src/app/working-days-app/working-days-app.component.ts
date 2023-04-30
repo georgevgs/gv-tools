@@ -106,74 +106,18 @@ export class WorkingDaysAppComponent implements OnInit {
   }
 
   runDay(): void {
-    const sDay = this.sddate.split('-')[2];
-    const sMonth = parseInt(this.sddate.split('-')[1]) - 1;
-    const sYear = this.sddate.split('-')[0];
-
-    const eDay = this.eddate.split('-')[2];
-    const eMonth = parseInt(this.eddate.split('-')[1]) - 1;
-    const eYear = this.sddate.split('-')[0];
-
-    const startDate = new Date(sYear, sMonth, sDay);
-    const endDate = new Date(eYear, eMonth, eDay);
+    const [sYear, sMonth, sDay] = this.sddate.split('-');
+    const [eYear, eMonth, eDay] = this.eddate.split('-');
+    const startDate = new Date(sYear, sMonth - 1, sDay);
+    const endDate = new Date(eYear, eMonth - 1, eDay);
 
     this.getBusinessDatesCount(startDate, endDate, 'Days');
   }
 
   runMonth(): void {
-    const sDay = 0o1;
-    const sMonth = parseInt(this.mdate.split('-')[1]) - 1;
-    const sYear = this.mdate.split('-')[0];
-
-    let eDay = 31;
-
-    switch (sMonth as number) {
-      case 0: // January
-        eDay = 31;
-        break;
-      case 1: // February
-        if (sYear === '2024' || sYear === '2028') {
-          eDay = 29;
-        } else {
-          eDay = 28;
-        }
-        break;
-      case 2: // March
-        eDay = 31;
-        break;
-      case 3: // April
-        eDay = 30;
-        break;
-      case 4: // May
-        eDay = 31;
-        break;
-      case 5: // June
-        eDay = 30;
-        break;
-      case 6: // July
-        eDay = 31;
-        break;
-      case 7: // August
-        eDay = 31;
-        break;
-      case 8: // September
-        eDay = 30;
-        break;
-      case 9: // October
-        eDay = 31;
-        break;
-      case 10: // November
-        eDay = 30;
-        break;
-      case 11: // December
-        eDay = 31;
-    }
-
-    const eMonth = parseInt(this.mdate.split('-')[1]) - 1;
-    const eYear = this.mdate.split('-')[0];
-
-    const startDate = new Date(sYear, sMonth, sDay);
-    const endDate = new Date(eYear, eMonth, eDay);
+    const [year, month] = this.mdate.split('-');
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0);
 
     this.getBusinessDatesCount(startDate, endDate, 'Month');
   }
@@ -186,82 +130,83 @@ export class WorkingDaysAppComponent implements OnInit {
     try {
       this.count = 0;
 
-      // *** Calculate rotating holidays in Greece START ***
       const currentYear = new Date().getFullYear();
       const currentEaster = this.calculateOrthodoxEaster(currentYear);
 
-      const cleanMondayDate = new Date(
-        currentEaster.getTime() - 48 * 24 * 60 * 60 * 1000
-      );
-      const cleanMonday =
-        cleanMondayDate.getDate().toString() +
-        cleanMondayDate.getMonth().toString();
+      // Calculate rotating holidays in Greece
+      const rotatingHolidays = [
+        {
+          date: new Date(currentEaster.getTime() - 48 * 24 * 60 * 60 * 1000),
+          name: 'cleanMonday',
+        },
+        {
+          date: new Date(currentEaster.getTime() - 2 * 24 * 60 * 60 * 1000),
+          name: 'bigFriday',
+        },
+        {
+          date: new Date(currentEaster.getTime() + 24 * 60 * 60 * 1000),
+          name: 'easterMonday',
+        },
+        {
+          date: new Date(currentEaster.getTime() + 50 * 24 * 60 * 60 * 1000),
+          name: 'whitMonday',
+        },
+      ];
 
-      const bigFriday =
-        (currentEaster.getDate() - 2).toString() +
-        currentEaster.getMonth().toString();
+      rotatingHolidays.forEach((holiday) => {
+        const month = holiday.date.getMonth().toString();
+        const date = holiday.date.getDate().toString();
+        const holidayStr = date + month;
+        this.rotatingHolidays.push(holidayStr);
+      });
 
-      const easterMonday =
-        (currentEaster.getDate() + 1).toString() +
-        currentEaster.getMonth().toString();
-
-      const whitMondayDate = new Date(
-        currentEaster.getTime() + 50 * 24 * 60 * 60 * 1000
-      );
-      const whitMonday =
-        whitMondayDate.getDate().toString() +
-        whitMondayDate.getMonth().toString();
-
-      this.rotatingHolidays.push(
-        cleanMonday,
-        bigFriday,
-        easterMonday,
-        whitMonday
-      );
-      // *** Calculate rotating holidays in Greece END ***
-
-      // *** Calculate first of May START ***
+      // Calculate first of May
       const firstMayDate = new Date(`${currentYear}-05-01`);
-
       if (firstMayDate.getDay() === 6) {
         // Saturday is 6, Sunday is 0
         firstMayDate.setDate(firstMayDate.getDate() + 2); // add 2 days to get the first working day (Monday)
       } else if (firstMayDate.getDay() === 0) {
         firstMayDate.setDate(firstMayDate.getDate() + 1); // add 1 day to get the first working day (Monday)
       }
-
-      const firstMay =
-        firstMayDate.getDate().toString() + firstMayDate.getMonth().toString();
+      const firstMay = `${firstMayDate.getDate()}${firstMayDate.getMonth()}`;
       this.holidays.push(firstMay);
-      // *** Calculate first of May END ***
 
-      const curDate = new Date(startDate.getTime());
-      while (curDate <= endDate) {
-        const dayOfWeek = curDate.getDay();
-        const date = curDate.getDate();
-        const month = curDate.getMonth();
-        const dateMonth = date.toString() + month.toString();
-        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+      const countWorkDays = (
+        startDate: Date,
+        endDate: number | Date,
+        holidays: string[],
+        rotatingHolidays: string[]
+      ): number => {
+        let count = 0;
+        const curDate = new Date(startDate.getTime());
+        while (curDate <= endDate) {
+          const dayOfWeek = curDate.getDay();
+          const date = curDate.getDate();
+          const month = curDate.getMonth();
+          const dateMonth = `${date}${month}`;
           if (
-            !this.holidays.includes(dateMonth) &&
-            !this.rotatingHolidays.includes(dateMonth)
+            dayOfWeek !== 0 &&
+            dayOfWeek !== 6 &&
+            !holidays.includes(dateMonth) &&
+            !rotatingHolidays.includes(dateMonth)
           ) {
-            this.count++;
+            count++;
           }
+          curDate.setDate(curDate.getDate() + 1);
         }
-        curDate.setDate(curDate.getDate() + 1);
-      }
+        return count;
+      };
 
-      curDate.setDate(curDate.getDate() - 1); // Revert back one day to calculate correctly bellow
-
-      let daysOff = 0;
-      if (tab === 'Month') {
-        daysOff = this.mdaysoff;
-      } else if (tab === 'Days') {
-        daysOff = this.ddaysoff;
-      }
-
-      this.count = this.count - daysOff;
+      const workDays = countWorkDays(
+        startDate,
+        endDate,
+        this.holidays,
+        this.rotatingHolidays
+      );
+      const daysOff =
+        tab === 'Month' ? this.mdaysoff : tab === 'Days' ? this.ddaysoff : 0;
+      const workDaysWithoutDaysOff = workDays - daysOff;
+      this.count = workDaysWithoutDaysOff;
 
       const wisDays = Math.ceil(this.count / 2); // Gets workinsync days
 
@@ -286,12 +231,6 @@ export class WorkingDaysAppComponent implements OnInit {
   }
 
   dateHandler(): void {
-    // if(this.submittedDates.length > this.oldDateLength){
-    //   console.log('added');
-    // } else {
-    //   console.log('removed');
-    // }
-    // this.oldDateLength = this.submittedDates.length;
     localStorage.removeItem('submittedDatesLS');
     localStorage.setItem(
       'submittedDatesLS',
