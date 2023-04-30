@@ -8,9 +8,8 @@ describe('EmailGeneratorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EmailGeneratorComponent ]
-    })
-    .compileComponents();
+      declarations: [EmailGeneratorComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -21,5 +20,21 @@ describe('EmailGeneratorComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should generate random email', () => {
+    component.generateEmail();
+    expect(component.email).toMatch(/^[a-z0-9]{15}@gvtools\.work$/);
+  });
+
+  it('should generate random password', () => {
+    component.generatePassword();
+    expect(component.password).toMatch(/^[0-9a-zA-Z!@%*()]{12}$/);
+  });
+
+  it('should generate a name and surname', () => {
+    component.generateName();
+    expect(component.name).toBeTruthy();
+    expect(component.surname).toBeTruthy();
   });
 });
